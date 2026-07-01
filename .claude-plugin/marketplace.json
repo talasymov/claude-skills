@@ -1,0 +1,11 @@
+{
+  "name": "claude-skills",
+  "owner": { "name": "talasymov" },
+  "plugins": [
+    {
+      "name": "project-docs",
+      "source": "./plugins/project-docs",
+      "description": "Scaffold and maintain a clear project documentation structure: a root README front door, docs/ living trackers (ROADMAP, TASKS, TECH_DEBT, BUGS, DECISIONS, PROGRESS), a stable handbook, and superpowers task artifacts."
+    }
+  ]
+}
