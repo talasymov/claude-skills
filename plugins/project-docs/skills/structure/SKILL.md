@@ -69,6 +69,20 @@ When new information appears, put it in exactly ONE home:
 Also: keep `README.md` and `docs/README.md` links fresh; when a tracker is added/renamed,
 update the map; move resolved bugs from `BUGS.md` to `PROGRESS.md`.
 
+### After finishing a piece of work
+
+Update the trackers so they reflect reality: check off completed items in `TASKS.md`,
+append to `PROGRESS.md`, record decisions in `DECISIONS.md`, file new bugs/debt. Or run
+`/project-docs:sync` to do this from the git history.
+
+## Commands (this plugin)
+
+- `/project-docs:work [task]` — start the next open task, run the superpowers chain, update docs on success
+- `/project-docs:sync` — update trackers from recent git changes
+- `/project-docs:status` — read-only status dashboard
+- `/project-docs:capture <note>` — file a note into the right tracker
+- `/project-docs:decide <decision>` — record an ADR in `DECISIONS.md`
+
 ## Safety rules
 
 - Idempotent; never clobber non-empty files; never delete without `git mv` + provenance.

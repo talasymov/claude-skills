@@ -11,6 +11,22 @@ Scaffold and maintain a clear project documentation structure — a root `README
 
 Skill: `/project-docs:structure` (also auto-invoked when you ask to set up or actualize project docs).
 
+### Commands
+
+| Command | What it does |
+|---------|--------------|
+| `/project-docs:work [task]` | Pick the next open task from `docs/TASKS.md`, confirm, run the superpowers chain, then update the docs on success |
+| `/project-docs:sync` | Update the trackers to reflect recent git changes |
+| `/project-docs:status` | Read-only status dashboard (open tasks/bugs/debt, roadmap focus, recent progress) |
+| `/project-docs:capture <note>` | File a note into the right tracker (task/bug/debt/decision) |
+| `/project-docs:decide <decision>` | Record an ADR entry in `docs/DECISIONS.md` |
+
+### Doc-update reminder (hook)
+
+The plugin ships a non-blocking **Stop** hook: when a project uses this structure
+(`docs/TASKS.md` present) and has uncommitted changes outside `docs/`, it reminds you to
+run `/project-docs:sync`. It never edits files and never blocks.
+
 ## Install
 
 ```
