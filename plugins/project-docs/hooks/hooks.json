@@ -1,0 +1,10 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "type": "command",
+        "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/remind-sync.sh"
+      }
+    ]
+  }
+}
