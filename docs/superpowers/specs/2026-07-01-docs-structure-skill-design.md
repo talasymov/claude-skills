@@ -1,8 +1,14 @@
-# `docs-structure` Skill + Marketplace — Design
+# `project-docs` Plugin + `structure` Skill + Marketplace — Design
 
 **Date:** 2026-07-01
 **Status:** Approved
 **Repo:** new — `talasymov/claude-skills` (public GitHub), local at `~/projects/claude-skills`
+
+## Naming (reads like `superpowers:brainstorming`)
+- **Marketplace:** `claude-skills` (a collection that can host several plugins over time)
+- **Plugin (namespace):** `project-docs`
+- **Skill (action):** `structure`
+- **Invocation:** `/project-docs:structure` · **Install:** `project-docs@claude-skills`
 
 ## Problem
 
@@ -14,15 +20,15 @@ project always uses the latest version — not copy-pasted per repo.
 
 ## Goal
 
-A Claude Code **skill** that (1) scaffolds this documentation structure into any project
-and (2) guides ongoing maintenance ("what goes where"), distributed as a **plugin in a
-git-based marketplace** so it installs once at user scope, works in every project, and
-updates via `/plugin marketplace update`.
+A Claude Code **skill** (`structure`, in the `project-docs` plugin) that (1) scaffolds this
+documentation structure into any project and (2) guides ongoing maintenance ("what goes
+where"), distributed as a **plugin in a git-based marketplace** so it installs once at user
+scope, works in every project, and updates via `/plugin marketplace update`.
 
 ## Non-Goals
 
-- No project-specific dirs (`data/`, `diagnostics/`, casino specifics). The skill scaffolds
-  the **generic** doc structure only.
+- No project-specific dirs (`data/`, `diagnostics/`, casino specifics). Scaffolds the
+  **generic** doc structure only.
 - The skill does not manage `docs/superpowers/` contents — those are created by the
   superpowers workflow itself; the skill only references them in the map.
 - No CI, no tests-as-code (this is a docs/skill repo). Verification is structural.
@@ -36,7 +42,7 @@ co-located under `plugins/`.
 **User flow (any machine, any project):**
 ```
 /plugin marketplace add talasymov/claude-skills
-/plugin install docs-structure@claude-skills
+/plugin install project-docs@claude-skills
 ```
 Installed at **user scope** → the skill is available in every project on that machine.
 
@@ -56,15 +62,15 @@ This pulls the latest marketplace repo commit; Claude Code compares the plugin's
 ```
 claude-skills/
 ├── .claude-plugin/
-│   └── marketplace.json         # marketplace catalog (lists docs-structure)
+│   └── marketplace.json         # marketplace catalog (lists the project-docs plugin)
 ├── README.md                    # what this is, install/update commands, contents
 ├── LICENSE                      # MIT
 └── plugins/
-    └── docs-structure/
+    └── project-docs/
         ├── .claude-plugin/
-        │   └── plugin.json      # name, description, version
+        │   └── plugin.json      # name: project-docs, description, version
         └── skills/
-            └── docs-structure/
+            └── structure/
                 ├── SKILL.md     # the skill (scaffold + maintain)
                 └── templates/   # files copied during scaffold
                     ├── README.md
@@ -89,8 +95,8 @@ claude-skills/
   "owner": { "name": "talasymov" },
   "plugins": [
     {
-      "name": "docs-structure",
-      "source": "./plugins/docs-structure",
+      "name": "project-docs",
+      "source": "./plugins/project-docs",
       "description": "Scaffold and maintain a clear project documentation structure: a root README front door, docs/ living trackers (ROADMAP, TASKS, TECH_DEBT, BUGS, DECISIONS, PROGRESS), a stable handbook, and superpowers task artifacts."
     }
   ]
@@ -99,10 +105,10 @@ claude-skills/
 (`source` is a relative-path STRING for a co-located plugin — resolved from marketplace
 root. Object form is only for external repos.)
 
-### `plugins/docs-structure/.claude-plugin/plugin.json`
+### `plugins/project-docs/.claude-plugin/plugin.json`
 ```json
 {
-  "name": "docs-structure",
+  "name": "project-docs",
   "description": "Scaffold and maintain a clear, consistent project documentation structure.",
   "version": "0.1.0",
   "author": { "name": "talasymov" }
@@ -111,17 +117,19 @@ root. Object form is only for external repos.)
 `version` is semver and is bumped on every meaningful change so `/plugin marketplace
 update` detects new releases with a controlled cadence.
 
-### `SKILL.md` frontmatter
+### `SKILL.md` frontmatter (`plugins/project-docs/skills/structure/SKILL.md`)
 ```markdown
 ---
-name: docs-structure
+name: structure
 description: Use when setting up or maintaining a project's documentation structure — a root README front door, docs/ living trackers (ROADMAP, TASKS, TECH_DEBT, BUGS, DECISIONS, PROGRESS), a stable docs/handbook reference, and docs/superpowers task artifacts. Triggers: "set up project docs", "documentation structure", "where do I track tasks/tech debt/decisions", "actualize the docs".
 ---
 ```
+Invocation: `/project-docs:structure` (plugin namespace + skill name); primary trigger is
+the `description` (model-invoked).
 
 ## The Skill (`SKILL.md` body)
 
-Announce at start: "Using docs-structure to <scaffold|maintain> the project docs."
+Announce at start: "Using project-docs:structure to <scaffold|maintain> the project docs."
 
 ### The structure it establishes (the mental model)
 | Layer | Path | Role | Changes |
@@ -184,14 +192,15 @@ spec+plan, demonstrating the structure it distributes.
   `/plugin marketplace update claude-skills`.
 
 ## Verification
-1. `.claude-plugin/marketplace.json` and `plugins/docs-structure/.claude-plugin/plugin.json`
+1. `.claude-plugin/marketplace.json` and `plugins/project-docs/.claude-plugin/plugin.json`
    are valid JSON with all required fields.
-2. `SKILL.md` has valid frontmatter with a `description`.
+2. `SKILL.md` has valid frontmatter with `name` and `description`.
 3. Templates render: scaffolding into an empty temp dir produces the full tree; re-running
    is a no-op (idempotent); a pre-existing non-empty file is kept, not overwritten.
 4. Repo pushed to `github.com/talasymov/claude-skills` (public); README documents the
    three user commands (add / install / update).
-5. Manual smoke test by the user: add marketplace, install, invoke in another project.
+5. Manual smoke test by the user: add marketplace, install, invoke `/project-docs:structure`
+   in another project.
 
 ## Risks
 - **Marketplace `source` path format** could change across Claude Code versions — verified
