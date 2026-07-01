@@ -54,8 +54,14 @@ This is the durable "how it works" reference. Day-to-day state lives in the `doc
 - `hooks/hooks.json` registers hooks; auto-active when the plugin is enabled (user scope → all
   projects). Reference the script with `${CLAUDE_PLUGIN_ROOT}`:
 ```json
-{ "hooks": { "Stop": [ { "type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/remind-sync.sh" } ] } }
+{ "hooks": { "Stop": [ { "hooks": [ { "type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/remind-sync.sh" } ] } ] } }
 ```
+**Schema gotcha (bit us in v0.2.0):** each entry in the `Stop` array is a *matcher-group*
+object with a nested **`hooks` array** — NOT `{type,command}` directly. Stop takes no
+`matcher`, so the group is just `{ "hooks": [ … ] }`. Wrong shape → "expected array,
+received undefined" at `hooks.Stop[0].hooks` and the hook silently fails to load (visible
+only via `/doctor`, since `python3 -m json.tool` still passes). Validate against the CC hook
+schema, not just JSON validity.
 - **Stop hook contract** — non-blocking reminder: `exit 0` and print
   `{"hookSpecificOutput":{"hookEventName":"Stop","additionalContext":"…"}}`.
   NEVER print `decision:"block"` — that forces the turn to continue and can loop.

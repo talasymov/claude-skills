@@ -46,7 +46,7 @@ Commit identity (repo has none configured):
 - **plugin.json**: `name` required; `version` (semver) drives `/plugin marketplace update` detection. Omitting version = update on every commit SHA.
 - **Skill**: `skills/<name>/SKILL.md`, frontmatter needs `description` (`name` optional, defaults to dir). Invoked `/project-docs:<skill>`; primarily model-invoked by `description`.
 - **Commands**: `commands/<name>.md` at plugin root (NOT under `.claude-plugin/`) → `/project-docs:<name>`. Frontmatter `description` (+ optional `argument-hint`). Body is a PROMPT; use `$ARGUMENTS` for input; instruct Claude to use its Bash/Read/Edit tools (don't rely on `!`/`@` preprocessing). Get dates via `date +%F`.
-- **Hooks**: `hooks/hooks.json` at plugin root, auto-active when the plugin is enabled (user scope → all projects). Reference scripts via `${CLAUDE_PLUGIN_ROOT}`. Stop hooks take no matcher.
+- **Hooks**: `hooks/hooks.json` at plugin root, auto-active when the plugin is enabled (user scope → all projects). Reference scripts via `${CLAUDE_PLUGIN_ROOT}`. Each event array holds *matcher-group* objects with a nested **`hooks` array**: `{"hooks":{"Stop":[{"hooks":[{"type":"command","command":"…"}]}]}}`. Stop takes no `matcher`. (Putting `{type,command}` directly under `Stop[0]` fails to load — caught only by `/doctor`; fixed in v0.2.1.)
 - **Non-blocking Stop reminder**: `exit 0` + stdout `{"hookSpecificOutput":{"hookEventName":"Stop","additionalContext":"…"}}`. NEVER emit `decision:"block"` (that loops). `remind-sync.sh` is fail-safe: silent no-op (exit 0) on any unexpected condition; fires only when `docs/TASKS.md` exists AND git repo AND uncommitted changes outside `docs/`.
 
 Full detail + how to test the hook: `docs/handbook/01-plugin-development.md`.

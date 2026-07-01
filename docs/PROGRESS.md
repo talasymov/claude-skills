@@ -2,6 +2,15 @@
 
 Done-log and lessons (backward-looking). Open work is in [TASKS.md](TASKS.md).
 
+## 2026-07-01 — v0.2.1: fix Stop-hook load (schema)
+- `/doctor` on install surfaced: `hooks.Stop[0].hooks expected array, received undefined` — the
+  hook silently failed to load in v0.2.0.
+- Root cause: wrong `hooks.json` shape. Each `Stop` entry must be a matcher-group with a nested
+  **`hooks` array**, not `{type,command}` directly. Fixed the file; corrected the format in
+  `CLAUDE.md` + `handbook/01`. Bumped 0.2.0 → 0.2.1.
+- **Lesson:** `python3 -m json.tool` proves JSON validity, NOT schema validity. Validate plugin
+  manifests/hooks against the CC schema (or `/doctor` after install) before claiming done.
+
 ## 2026-07-01 — v0.2.0: commands + doc-update hook
 - Added five commands (`/project-docs:work|sync|status|capture|decide`) under
   `plugins/project-docs/commands/`.
