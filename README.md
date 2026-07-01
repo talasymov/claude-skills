@@ -59,5 +59,7 @@ plugins/project-docs/               # the project-docs plugin
   .claude-plugin/plugin.json
   skills/structure/SKILL.md         # the skill
   skills/structure/templates/       # files scaffolded into target projects
-docs/superpowers/                   # this repo's own spec + plan (dogfooding)
+  commands/                         # /project-docs:{work,sync,status,capture,decide}
+  hooks/                            # Stop-hook: reminder to sync docs after work
+docs/superpowers/                   # this repo's own specs + plans (dogfooding)
 ```
